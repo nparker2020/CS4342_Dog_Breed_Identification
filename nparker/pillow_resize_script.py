@@ -9,13 +9,12 @@ resizeWidth = 200
 resizeHeight = 200
 limit = None;
 
-#C:\Users\Noah Parker\ML_Final_Project_Repo\dog-breed-identification\test
 count = 0;
-for image_file in os.listdir(pathString + "\\test"):
+for image_file in os.listdir(pathString + "\\train"):
     try:
-        with Image.open(pathString+"\\test\\"+image_file) as im:
+        with Image.open(pathString+"\\train\\"+image_file) as im:
             resized = im.resize((resizeWidth, resizeHeight));
-            resized.save(resized_directory+str(count)+".jpg")
+            resized.save(resized_directory+image_file+".jpg")
             count = count + 1;
     except IOError as e:
         print("Error resizing image: ", e)
