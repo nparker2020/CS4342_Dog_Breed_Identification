@@ -14,7 +14,7 @@ for image_file in os.listdir(pathString + "\\train"):
     try:
         with Image.open(pathString+"\\train\\"+image_file) as im:
             resized = im.resize((resizeWidth, resizeHeight));
-            resized.save(resized_directory+image_file+".jpg")
+            resized.save(resized_directory+image_file, "JPEG")
             count = count + 1;
     except IOError as e:
         print("Error resizing image: ", e)
