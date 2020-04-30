@@ -7,7 +7,27 @@ from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 import csv
 
-# pathString = os.path.join("C:", os.sep, "Users", "Nicholas", "Documents", "CS4342", "CS4342_Dog_Breed_Identification", "resized")
+# pathString = os.path.join("C:", os.sep, "Users", "Nicholas", "Documents", "CS4342", "FinalProject", "CS4342_Dog_Breed_Identification","test")
+pathString = os.path.join("C:", os.sep, "Users", "Nicholas", "Documents", "CS4342", "FinalProject", "CS4342_Dog_Breed_Identification", "test_resized")
+
+
+# resizeWidth = 200
+# resizeHeight = 200
+# limit = None;
+#
+# count = 0;
+# for image_file in os.listdir(pathString):
+#     try:
+#         with Image.open(os.path.join(pathString, image_file)) as im:
+#             resized = im.resize((resizeWidth, resizeHeight));
+#             resized.save(os.path.join(pathString2, image_file), "JPEG")
+#             count = count + 1;
+#     except IOError as e:
+#         print("Error resizing image: ", e)
+#
+#     if limit is not None and (count >= limit):
+#         break
+
 # count = 0
 # X = 0
 # for image_file in os.listdir(pathString):
@@ -32,7 +52,7 @@ import csv
 #     count += 1
 # print("X shape")
 # print(X.T.shape)
-# np.save("dog_breed_data.npy", X.T)
+# np.save("dog_breed_test_data.npy", X.T)
 
 # mydict = {}
 # with open("labels.csv", mode='r') as infile:
@@ -84,30 +104,31 @@ import csv
 # np.save("labels.npy", categories)
 # exit()
 
+
 X_in = np.load("dog_breed_data.npy")
 print("data")
 print(X_in.shape)
 
 y_in = np.load("dog_breed_labels.npy")
-print("labels")
+print("correct labels")
 print(y_in.shape)
 
 labels = np.load("labels.npy")
 print("labels")
 print(labels.shape)
+labels = np.sort(labels, axis=0)
 
-# X_train = X_in[:8177,:]
-# X_val = X_in[8177:,:]
-# y_train = y_in[:8177,:]
-# y_test = y_in[8177:,:]
 
 X_train, X_test, y_train, y_test = train_test_split(X_in, y_in, test_size=0.2, random_state=42)
 print("done splitting")
-LR = LogisticRegression(random_state=0, verbose=2, n_jobs=4, multi_class='multinomial', max_iter=500)
+LR = LogisticRegression(random_state=0, verbose=2, n_jobs=4, multi_class='multinomial', max_iter=2000)
 LR.classes_ = labels
-LR.fit(X_train, y_train)
+LR.fit(X_train, y_train.flatten())
 print("done fitting")
 print(LR.predict(X_test))
+temp = LR.predict_proba(X_test)
+print(temp)
+print(list(temp[0]))
 print(y_test)
 score = LR.score(X_test, y_test)
 print(score)
@@ -120,3 +141,7 @@ print(score)
 #
 # print("scoring")
 # print(auc)
+
+# out =
+#
+# np.savetxt("output.csv", out, delimiter=",")
