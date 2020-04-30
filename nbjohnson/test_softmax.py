@@ -59,6 +59,31 @@ import csv
 # print(y)
 # np.save("dog_breed_labels.npy", y)
 
+# mydict = {}
+# with open("labels.csv", mode='r') as infile:
+#     reader = csv.reader(infile)
+#     mydict = {rows[1]: 1 for rows in reader}
+#
+# print(len(mydict))
+# print(mydict)
+# count = 0
+# for i in mydict.keys():
+#     if count == 0:
+#         pass
+#     elif count == 1:
+#         categories = np.array([str(i)])
+#         categories = np.reshape(categories, (-1,1))
+#     else:
+#         temp = np.array([str(i)])
+#         temp = np.reshape(temp, (-1,1))
+#         categories = np.append(categories, temp, axis=0)
+#     count += 1
+#
+# print(categories)
+# print(categories.shape)
+# np.save("labels.npy", categories)
+# exit()
+
 X_in = np.load("dog_breed_data.npy")
 print("data")
 print(X_in.shape)
@@ -67,6 +92,10 @@ y_in = np.load("dog_breed_labels.npy")
 print("labels")
 print(y_in.shape)
 
+labels = np.load("labels.npy")
+print("labels")
+print(labels.shape)
+
 # X_train = X_in[:8177,:]
 # X_val = X_in[8177:,:]
 # y_train = y_in[:8177,:]
@@ -74,15 +103,20 @@ print(y_in.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(X_in, y_in, test_size=0.2, random_state=42)
 print("done splitting")
-LR = LogisticRegression(random_state=0, verbose=2, n_jobs=4)
+LR = LogisticRegression(random_state=0, verbose=2, n_jobs=4, multi_class='multinomial', max_iter=500)
+LR.classes_ = labels
 LR.fit(X_train, y_train)
 print("done fitting")
-yhat = LR.predict_proba(X_test)
-print("predicted")
-print(yhat)
-print("actual")
+print(LR.predict(X_test))
 print(y_test)
-print("done predicting")
-auc = roc_auc_score(y_test, yhat)
-print("scoring")
-print(auc)
+score = LR.score(X_test, y_test)
+print(score)
+# yhat = LR.predict_proba(X_test)
+# print("predicted")
+# print(yhat)
+# print("actual")
+# print(y_test)
+# print("done predicting")
+#
+# print("scoring")
+# print(auc)
