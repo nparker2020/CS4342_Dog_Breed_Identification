@@ -21,8 +21,8 @@ input_labels = np.load('dog_breed_og_flp_trans_labels_test.npy')
 new_input = Input(shape=(224,224,3)) # should be 224,224
 
 # graph changes over epochs
-logdir = "logs/scalars/" + datetime.time().strftime("%Y%m%d-%H%M%S")
-tensorboard_callback = TensorBoard(log_dir=logdir)
+# logdir = "logs/scalars/" + datetime.time().strftime("%Y%m%d-%H%M%S")
+# tensorboard_callback = TensorBoard(log_dir=logdir)
 
 model = Sequential()
 model.add(ResNet50(weights='imagenet', include_top=False, input_tensor=new_input, pooling='avg'))
@@ -36,8 +36,8 @@ model.compile(loss='categorical_crossentropy',
                   optimizer=SGD(lr=0.001, momentum=0.0, decay=0.0, nesterov=False),
                   metrics=['accuracy', 'categorical_crossentropy', 'mae'])
 
-model.fit(input_data, input_labels, epochs=1, batch_size=512, # validation_data=(X_val, y_val)
-              callbacks=[tensorboard_callback])
+model.fit(input_data, input_labels, epochs=1, batch_size=512) #, # validation_data=(X_val, y_val)
+              # callbacks=[tensorboard_callback])
 
 # model.save("test-resnet-model", save_format='tf')
 
