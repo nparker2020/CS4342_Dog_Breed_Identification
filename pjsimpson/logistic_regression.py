@@ -4,16 +4,10 @@ from skimage import io
 from sklearn import preprocessing, linear_model
 import warnings
 import skimage.transform as tf
-import os
-import matplotlib.pyplot as plt
-import time
 
 def convert2DBins(images_df, binSize, flip=False, translate=False):
     image_dir = '/Users/parkersimpson/PycharmProjects/CS4342/DogBreedProject/dog-breed-identification/resized/'
     for i in range(images_df.shape[0]):
-        # if i == 2:
-        #     break
-
         label = images_df.breed.iloc[i]
         image_name = images_df.id.iloc[i]
         image = io.imread(image_dir+image_name+'.jpg') # (200,200,3)
@@ -44,16 +38,12 @@ def convert2DBins(images_df, binSize, flip=False, translate=False):
             X = np.concatenate((X, image_bin[None, :]), axis=0)
             Y = np.concatenate((Y, np.array([label])), axis=0)
 
-    # print(X.shape, Y.shape, f'Class 1:', len(Y[Y == 'scottish_deerhound']))
     return X, Y
 
 
 def convert3DBins(images_df, binSize, flip=False, translate=False):
     image_dir = '/Users/parkersimpson/PycharmProjects/CS4342/DogBreedProject/dog-breed-identification/resized/'
     for i in range(images_df.shape[0]):
-        # if i == 2:
-        #     break
-
         label = images_df.breed.iloc[i]
         image_name = images_df.id.iloc[i]
         image = io.imread(image_dir+image_name+'.jpg') # (200,200,3)
@@ -87,12 +77,10 @@ def convert3DBins(images_df, binSize, flip=False, translate=False):
             X = np.concatenate((X, image_bin[None, :]), axis=0)
             Y = np.concatenate((Y, np.array([label])), axis=0)
 
-    # print(X.shape, Y.shape, 'Class 1:', len(Y[Y == 'scottish_deerhound']))
     return X, Y
 
 # Load Labels
 labels = pd.read_csv('/Users/parkersimpson/PycharmProjects/CS4342/DogBreedProject/dog-breed-identification/labels.csv')
-
 unique_breeds = labels.breed.unique() # 120
 
 # Group labels by breed in ascending order
@@ -122,7 +110,6 @@ if not saved:
 
         binned2_data = np.vstack((binned2_og_data, binned2_flip_data, binned2_translate_data))
         binned2_labels = np.hstack((binned2_og_labels, binned2_flip_labels, binned2_translate_labels))
-        # print(binned2_data.shape, binned2_labels.shape)
 
         binned3_og_data, binned3_og_labels = convert3DBins(breeds, bsize)
         binned3_flip_data, binned3_flip_labels = convert3DBins(breeds, bsize, flip=True)
@@ -130,7 +117,6 @@ if not saved:
 
         binned3_data = np.vstack((binned3_og_data, binned3_flip_data, binned3_translate_data))
         binned3_labels = np.hstack((binned3_og_labels, binned3_flip_labels, binned3_translate_labels))
-        # print(binned3_data.shape, binned3_labels.shape)
 
         np.save(f'/Users/parkersimpson/PycharmProjects/CS4342/DogBreedProject/CS4342_Dog_Breed_Identification/'
                 f'pjsimpson/binned-data/{binNum}_binned2D_data.npy', binned2_data)
@@ -147,7 +133,6 @@ tr_frac = [(3,5), (13,20), (7,10), (3,4), (4,5), (17,20)] # [60/40, 65/45, 70/30
 avg_scores = np.zeros((len(binSizes)*len(tr_frac), 2))
 count = 0
 
-start = time.time()
 for bs in binSizes:
     data_2D = np.load(f'binned-data/{bs}_binned2D_data.npy')
     labels_2D = np.load(f'binned-data/{bs}_binned2D_labels.npy')
@@ -191,10 +176,7 @@ for bs in binSizes:
                 score_vector[t, 1] = scre3
 
         avg = np.average(score_vector,axis=0)
-        print(avg)
         avg_scores[count,:] = avg
         count += 1
 
-end = time.time()
-print((end-start)/60)
 print(avg_scores)
