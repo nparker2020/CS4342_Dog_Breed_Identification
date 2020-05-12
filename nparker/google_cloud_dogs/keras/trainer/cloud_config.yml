@@ -1,0 +1,5 @@
+trainingInput:
+  runtimeVersion: "2.1"
+  scaleTier: BASIC_GPU
+  masterType: n1-standard-8
+  

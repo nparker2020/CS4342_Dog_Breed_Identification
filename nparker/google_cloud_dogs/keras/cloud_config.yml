@@ -1,0 +1,9 @@
+trainingInput:
+  runtimeVersion: "2.1"
+  scaleTier: CUSTOM
+  masterType: n1-standard-16
+  masterConfig:
+    acceleratorConfig:
+        count: 2
+        type: NVIDIA_TESLA_P100
+  
